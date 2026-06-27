@@ -2,10 +2,18 @@ package com.abhishek.architectai.service;
 
 import com.abhishek.architectai.dto.InterviewRequest;
 import com.abhishek.architectai.dto.InterviewResponse;
+import com.abhishek.architectai.entity.Interview;
+import com.abhishek.architectai.repository.InterviewRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class InterviewService {
+
+    private final InterviewRepository interviewRepository;
+
+    public InterviewService(InterviewRepository interviewRepository) {
+        this.interviewRepository = interviewRepository;
+    }
 
     public InterviewResponse processInterviewAnswer(InterviewRequest request) {
 
@@ -33,6 +41,16 @@ public class InterviewService {
         if (score >= 8) {
             feedback = "Strong architecture understanding";
         }
+
+        Interview interview = new Interview(
+                null,
+                request.getQuestion(),
+                request.getAnswer(),
+                score,
+                feedback
+        );
+
+        interviewRepository.save(interview);
 
         return new InterviewResponse(score, feedback);
     }

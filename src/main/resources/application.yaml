@@ -1,4 +1,9 @@
 spring:
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  datasource:
+    url: jdbc:mysql://localhost:3306/architect_ai
+    username: root
+    password: Abhi@2245
+
+  jpa:
+    hibernate:
+      ddl-auto: update
