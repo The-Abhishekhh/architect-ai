@@ -1,5 +1,6 @@
 package com.abhishek.architectai.service;
 
+import java.util.List;
 import com.abhishek.architectai.dto.InterviewRequest;
 import com.abhishek.architectai.dto.InterviewResponse;
 import com.abhishek.architectai.entity.Interview;
@@ -53,5 +54,8 @@ public class InterviewService {
         interviewRepository.save(interview);
 
         return new InterviewResponse(score, feedback);
+    }
+    public List<Interview> getInterviewHistory() {
+        return interviewRepository.findAll();
     }
 }
