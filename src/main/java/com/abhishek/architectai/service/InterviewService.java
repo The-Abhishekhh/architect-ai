@@ -6,6 +6,7 @@ import com.abhishek.architectai.dto.InterviewResponse;
 import com.abhishek.architectai.entity.Interview;
 import com.abhishek.architectai.repository.InterviewRepository;
 import org.springframework.stereotype.Service;
+import com.abhishek.architectai.exception.InterviewNotFoundException;
 
 @Service
 public class InterviewService {
@@ -60,6 +61,13 @@ public class InterviewService {
     }
 
     public void deleteInterview(Long id) {
+
+        if (!interviewRepository.existsById(id)) {
+            throw new InterviewNotFoundException(
+                    "Interview with id " + id + " not found"
+            );
+        }
+
         interviewRepository.deleteById(id);
     }
 }

@@ -1,0 +1,21 @@
+package com.abhishek.architectai.exception;
+
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(
+            InterviewNotFoundException.class
+    )
+    public Map<String, String> handleInterviewNotFound(
+            InterviewNotFoundException ex) {
+
+        return Map.of(
+                "error",
+                ex.getMessage()
+        );
+    }
+}
