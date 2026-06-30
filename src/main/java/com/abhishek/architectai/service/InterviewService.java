@@ -58,4 +58,8 @@ public class InterviewService {
     public List<Interview> getInterviewHistory() {
         return interviewRepository.findAll();
     }
+
+    public void deleteInterview(Long id) {
+        interviewRepository.deleteById(id);
+    }
 }

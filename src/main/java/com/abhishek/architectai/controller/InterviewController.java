@@ -28,4 +28,7 @@ public class InterviewController {
     public List<Interview> getHistory() {
         return interviewService.getInterviewHistory();
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteInterview(@PathVariable Long id) { interviewService.deleteInterview(id);}
 }
