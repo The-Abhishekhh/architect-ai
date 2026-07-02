@@ -5,13 +5,23 @@ import org.springframework.stereotype.Component;
 @Component
 public class AiEvaluationClient {
 
-    public String evaluateAnswer(String question,
-                                 String answer) {
+    public AiApiResponse evaluateAnswer(
+            AiApiRequest request) {
 
-        if (answer.length() > 40) {
-            return "Strong answer with detailed explanation";
+        System.out.println(
+                "Sending request to external AI..."
+        );
+
+        String feedback;
+
+        if (request.getAnswer().length() > 40) {
+            feedback =
+                    "AI says: Strong technical answer";
+        } else {
+            feedback =
+                    "AI says: Weak technical explanation";
         }
 
-        return "Weak answer. Lacks technical depth";
+        return new AiApiResponse(feedback);
     }
 }

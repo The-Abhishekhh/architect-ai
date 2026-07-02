@@ -8,6 +8,8 @@ import com.abhishek.architectai.repository.InterviewRepository;
 import org.springframework.stereotype.Service;
 import com.abhishek.architectai.exception.InterviewNotFoundException;
 import com.abhishek.architectai.client.AiEvaluationClient;
+import com.abhishek.architectai.client.AiApiRequest;
+import com.abhishek.architectai.client.AiApiResponse;
 
 @Service
 public class InterviewService {
@@ -27,17 +29,35 @@ public class InterviewService {
                 aiEvaluationClient;
     }
 
-    public InterviewResponse processInterviewAnswer(InterviewRequest request) {
-        String aiFeedback =
-                aiEvaluationClient.evaluateAnswer(
+    public InterviewResponse processInterviewAnswer(
+            InterviewRequest request) {
+
+        AiApiRequest aiRequest =
+                new AiApiRequest(
                         request.getQuestion(),
                         request.getAnswer()
                 );
 
+        AiApiResponse aiResponse =
+                aiEvaluationClient.evaluateAnswer(
+                        aiRequest
+                );
+
         int score = 8;
-        String feedback = aiFeedback;
+        String feedback =
+                aiResponse.getFeedback();
 
+        Interview interview = new Interview(
+                null,
+                request.getQuestion(),
+                request.getAnswer(),
+                score,
+                feedback
+        );
 
+        interviewRepository.save(interview);
+
+        return new InterviewResponse(score, feedback);
     }
     public List<Interview> getInterviewHistory() {
         return interviewRepository.findAll();
