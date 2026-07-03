@@ -1,26 +1,34 @@
 package com.abhishek.architectai.client;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 @Component
 public class AiEvaluationClient {
 
+    private final RestTemplate restTemplate;
+
+    public AiEvaluationClient(
+            RestTemplate restTemplate) {
+
+        this.restTemplate = restTemplate;
+    }
+
     public AiApiResponse evaluateAnswer(
             AiApiRequest request) {
 
-        System.out.println(
-                "Sending request to external AI..."
-        );
+        String url =
+                "https://jsonplaceholder.typicode.com/posts/1";
 
-        String feedback;
+        ExternalApiResponse response =
+                restTemplate.getForObject(
+                        url,
+                        ExternalApiResponse.class
+                );
 
-        if (request.getAnswer().length() > 40) {
-            feedback =
-                    "AI says: Strong technical answer";
-        } else {
-            feedback =
-                    "AI says: Weak technical explanation";
-        }
+        String feedback =
+                "External API says: " +
+                        response.getTitle();
 
         return new AiApiResponse(feedback);
     }
