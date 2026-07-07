@@ -7,3 +7,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+
+gemini:
+  api:
+    key: ${GEMINI_API_KEY}
