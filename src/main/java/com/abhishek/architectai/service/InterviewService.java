@@ -1,6 +1,8 @@
 package com.abhishek.architectai.service;
 
 import java.util.List;
+
+import com.abhishek.architectai.ai.AiProvider;
 import com.abhishek.architectai.dto.InterviewRequest;
 import com.abhishek.architectai.dto.InterviewResponse;
 import com.abhishek.architectai.entity.Interview;
@@ -15,18 +17,14 @@ import com.abhishek.architectai.client.AiApiResponse;
 public class InterviewService {
 
     private final InterviewRepository interviewRepository;
-    private final AiEvaluationClient aiEvaluationClient;
+    private final AiProvider aiProvider;;
 
     public InterviewService(
             InterviewRepository interviewRepository,
+            AiProvider aiProvider) {
 
-            AiEvaluationClient aiEvaluationClient) {
-
-        this.interviewRepository =
-                interviewRepository;
-
-        this.aiEvaluationClient =
-                aiEvaluationClient;
+        this.interviewRepository = interviewRepository;
+        this.aiProvider = aiProvider;
     }
 
     public InterviewResponse processInterviewAnswer(
@@ -39,9 +37,7 @@ public class InterviewService {
                 );
 
         AiApiResponse aiResponse =
-                aiEvaluationClient.evaluateAnswer(
-                        aiRequest
-                );
+                aiProvider.evaluateAnswer(aiRequest);
 
         int score = 8;
         String feedback =

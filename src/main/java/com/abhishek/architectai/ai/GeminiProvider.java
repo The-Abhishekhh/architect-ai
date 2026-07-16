@@ -1,18 +1,25 @@
-package com.abhishek.architectai.client;
+package com.abhishek.architectai.ai;
 
+import com.abhishek.architectai.client.AiApiRequest;
+import com.abhishek.architectai.client.AiApiResponse;
+import com.abhishek.architectai.config.GeminiConfig;
+import com.google.genai.Client;
 import com.google.genai.errors.ClientException;
+import com.google.genai.types.GenerateContentResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import com.abhishek.architectai.config.GeminiConfig;
-import com.abhishek.architectai.dto.gemini.*;
-import com.google.genai.Client;
-import com.google.genai.types.GenerateContentResponse;
 
 @Component
-public class AiEvaluationClient {
+public class GeminiProvider implements AiProvider {
 
-    public AiEvaluationClient(
+    private static final Logger logger =
+            LoggerFactory.getLogger(GeminiProvider.class);
+
+    private final Client geminiClient;
+    private final GeminiConfig geminiConfig;
+
+    public GeminiProvider(
             Client geminiClient,
             GeminiConfig geminiConfig) {
 
@@ -20,27 +27,25 @@ public class AiEvaluationClient {
         this.geminiConfig = geminiConfig;
     }
 
-
-    private static final Logger logger =
-            LoggerFactory.getLogger(AiEvaluationClient.class);
-
-    private final Client geminiClient;
-    private final GeminiConfig geminiConfig;
-
+    @Override
     public AiApiResponse evaluateAnswer(AiApiRequest request) {
 
         logger.info("Sending request to Gemini SDK...");
+
         String prompt = """
-    You are an interview evaluator.
+                You are an interview evaluator.
 
-    Question:
-    %s
+                Question:
+                %s
 
-    Candidate Answer:
-    %s
+                Candidate Answer:
+                %s
 
-    Evaluate...
-    """.formatted(
+                Evaluate the answer.
+                Give:
+                1. Score out of 10
+                2. Feedback
+                """.formatted(
                 request.getQuestion(),
                 request.getAnswer()
         );
