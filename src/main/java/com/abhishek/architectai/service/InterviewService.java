@@ -9,18 +9,22 @@ import com.abhishek.architectai.entity.Interview;
 import com.abhishek.architectai.repository.InterviewRepository;
 import org.springframework.stereotype.Service;
 import com.abhishek.architectai.exception.InterviewNotFoundException;
-import com.abhishek.architectai.client.AiEvaluationClient;
 import com.abhishek.architectai.client.AiApiRequest;
 import com.abhishek.architectai.client.AiApiResponse;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 @Service
 public class InterviewService {
 
     private final InterviewRepository interviewRepository;
-    private final AiProvider aiProvider;;
+    private final AiProvider aiProvider;
+
+
 
     public InterviewService(
             InterviewRepository interviewRepository,
+
+            @Qualifier("mockAiProvider")
             AiProvider aiProvider) {
 
         this.interviewRepository = interviewRepository;
