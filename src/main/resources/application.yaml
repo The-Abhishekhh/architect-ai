@@ -11,3 +11,4 @@ spring:
 gemini:
   api:
     key: ${GEMINI_API_KEY}
+  model: gemini-3.5-flash

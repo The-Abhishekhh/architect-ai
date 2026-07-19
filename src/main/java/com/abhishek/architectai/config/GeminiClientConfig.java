@@ -14,13 +14,7 @@ public class GeminiClientConfig {
         this.geminiConfig = geminiConfig;
     }
 
-    @PostConstruct
-    public void printKey() {
 
-        System.out.println("Loaded API Key:");
-        System.out.println(geminiConfig.getApiKey());
-
-    }
 
     @Bean
     public Client geminiClient() {

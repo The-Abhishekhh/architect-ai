@@ -54,7 +54,7 @@ public class GeminiProvider implements AiProvider {
 
             GenerateContentResponse response =
                     geminiClient.models.generateContent(
-                            "gemini-2.0-flash",
+                            geminiConfig.getModel(),
                             prompt,
                             null
                     );

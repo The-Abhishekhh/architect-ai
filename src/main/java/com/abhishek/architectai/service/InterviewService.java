@@ -24,7 +24,7 @@ public class InterviewService {
     public InterviewService(
             InterviewRepository interviewRepository,
 
-            @Qualifier("mockAiProvider")
+            @Qualifier("geminiProvider")
             AiProvider aiProvider) {
 
         this.interviewRepository = interviewRepository;

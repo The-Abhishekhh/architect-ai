@@ -21,5 +21,6 @@ public class Interview {
 
     private int score;
 
-    private String feedback;
+    @Column(columnDefinition = "TEXT")
+    private String feedback;;
 }
