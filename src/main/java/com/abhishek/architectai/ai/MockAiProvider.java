@@ -10,18 +10,34 @@ public class MockAiProvider implements AiProvider {
     @Override
     public AiApiResponse evaluateAnswer(AiApiRequest request) {
 
-        String feedback = """
-                Score: 8/10
+        AiApiResponse response = new AiApiResponse();
 
-                Strengths:
-                - Good attempt at answering the question.
-                - Answer is relevant to the topic.
+        response.setScore(8);
 
-                Improvements:
-                - Add more technical depth.
-                - Include a real-world example.
-                """;
+        response.setFeedback(
+                "Good attempt at answering the question. Add more technical depth and include a real-world example."
+        );
 
-        return new AiApiResponse(feedback);
+        response.setStrengths(
+                java.util.List.of(
+                        "Relevant answer",
+                        "Good attempt"
+                )
+        );
+
+        response.setWeaknesses(
+                java.util.List.of(
+                        "Lacks technical depth"
+                )
+        );
+
+        response.setImprovements(
+                java.util.List.of(
+                        "Add real-world examples",
+                        "Explain concepts in more detail"
+                )
+        );
+
+        return response;
     }
 }
