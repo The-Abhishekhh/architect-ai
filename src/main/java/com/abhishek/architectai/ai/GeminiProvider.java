@@ -3,6 +3,7 @@ package com.abhishek.architectai.ai;
 import com.abhishek.architectai.client.AiApiRequest;
 import com.abhishek.architectai.client.AiApiResponse;
 import com.abhishek.architectai.config.GeminiConfig;
+import com.abhishek.architectai.service.validator.AiResponseValidator;
 import com.google.genai.Client;
 import com.google.genai.errors.ClientException;
 import com.google.genai.types.GenerateContentResponse;
@@ -10,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.abhishek.architectai.exception.InvalidAiResponseException;
 
 @Component
 public class GeminiProvider implements AiProvider {
@@ -21,15 +23,18 @@ public class GeminiProvider implements AiProvider {
     private final Client geminiClient;
     private final GeminiConfig geminiConfig;
     private final ObjectMapper objectMapper;
+    private final AiResponseValidator validator;
 
     public GeminiProvider(
             Client geminiClient,
             GeminiConfig geminiConfig,
-            ObjectMapper objectMapper) {
+            ObjectMapper objectMapper,
+            AiResponseValidator validator) {
 
         this.geminiClient = geminiClient;
         this.geminiConfig = geminiConfig;
         this.objectMapper = objectMapper;
+        this.validator = validator;
     }
 
 
@@ -79,12 +84,20 @@ Candidate Answer:
                             null
                     );
 
-            return objectMapper.readValue(
-                    response.text(),
-                    AiApiResponse.class
-            );
+            AiApiResponse aiResponse =
+                    objectMapper.readValue(
+                            response.text(),
+                            AiApiResponse.class
+                    );
 
-        } catch (Exception e) {
+            validator.validate(aiResponse);
+
+            return aiResponse;
+
+        } catch (InvalidAiResponseException e) {
+            throw e;
+        }
+        catch (Exception e) {
 
             logger.error("Gemini API error", e);
 
