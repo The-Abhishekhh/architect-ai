@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.abhishek.architectai.exception.InvalidAiResponseException;
+import com.abhishek.architectai.exception.AiServiceUnavailableException;
 
 @Component
 public class GeminiProvider implements AiProvider {
@@ -101,7 +102,7 @@ Candidate Answer:
 
             logger.error("Gemini API error", e);
 
-            throw new RuntimeException(
+            throw new AiServiceUnavailableException(
                     "AI service is temporarily unavailable."
             );
         }

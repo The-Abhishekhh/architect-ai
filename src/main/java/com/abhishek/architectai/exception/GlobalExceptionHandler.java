@@ -31,4 +31,16 @@ public class GlobalExceptionHandler {
                 ex.getMessage()
         );
     }
+    @ExceptionHandler(
+            AiServiceUnavailableException.class
+    )
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    public Map<String, String> handleAiServiceUnavailable(
+            AiServiceUnavailableException ex) {
+
+        return Map.of(
+                "error",
+                ex.getMessage()
+        );
+    }
 }
