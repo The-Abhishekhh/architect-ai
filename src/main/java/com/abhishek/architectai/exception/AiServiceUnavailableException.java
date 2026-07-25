@@ -1,8 +1,18 @@
 package com.abhishek.architectai.exception;
 
-public class AiServiceUnavailableException extends RuntimeException {
+import org.springframework.http.HttpStatus;
 
-    public AiServiceUnavailableException(String message) {
-        super(message);
+public class AiServiceUnavailableException
+        extends ApplicationException {
+
+    public AiServiceUnavailableException(
+            String message) {
+
+        super(
+                message,
+                HttpStatus.SERVICE_UNAVAILABLE
+        );
+
     }
+
 }

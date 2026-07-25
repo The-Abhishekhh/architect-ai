@@ -2,45 +2,22 @@ package com.abhishek.architectai.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.http.ResponseEntity;
 import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    @ExceptionHandler(ApplicationException.class)
+    public ResponseEntity<Map<String, String>> handleApplicationException(
+            ApplicationException ex) {
 
-    @ExceptionHandler(
-            InterviewNotFoundException.class
-    )
-    public Map<String, String> handleInterviewNotFound(
-            InterviewNotFoundException ex) {
-
-        return Map.of(
-                "error",
-                ex.getMessage()
-        );
-    }
-    @ExceptionHandler(
-            InvalidAiResponseException.class
-    )
-    @ResponseStatus(HttpStatus.BAD_GATEWAY)
-    public Map<String, String> handleInvalidAiResponse(
-            InvalidAiResponseException ex) {
-
-        return Map.of(
-                "error",
-                ex.getMessage()
-        );
-    }
-    @ExceptionHandler(
-            AiServiceUnavailableException.class
-    )
-    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
-    public Map<String, String> handleAiServiceUnavailable(
-            AiServiceUnavailableException ex) {
-
-        return Map.of(
-                "error",
-                ex.getMessage()
-        );
+        return ResponseEntity
+                .status(ex.getStatus())
+                .body(
+                        Map.of(
+                                "error",
+                                ex.getMessage()
+                        )
+                );
     }
 }

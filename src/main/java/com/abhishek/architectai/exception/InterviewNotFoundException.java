@@ -1,9 +1,17 @@
 package com.abhishek.architectai.exception;
 
+import org.springframework.http.HttpStatus;
+
 public class InterviewNotFoundException
-        extends RuntimeException {
+        extends ApplicationException {
 
     public InterviewNotFoundException(String message) {
-        super(message);
+
+        super(
+                message,
+                HttpStatus.NOT_FOUND
+        );
+
     }
+
 }

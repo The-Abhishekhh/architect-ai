@@ -1,8 +1,17 @@
 package com.abhishek.architectai.exception;
 
-public class InvalidAiResponseException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class InvalidAiResponseException
+        extends ApplicationException {
 
     public InvalidAiResponseException(String message) {
-        super(message);
+
+        super(
+                message,
+                HttpStatus.BAD_GATEWAY
+        );
+
     }
+
 }
