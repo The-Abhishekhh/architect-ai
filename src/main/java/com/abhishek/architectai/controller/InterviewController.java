@@ -7,6 +7,8 @@ import com.abhishek.architectai.dto.InterviewResponse;
 import com.abhishek.architectai.service.InterviewService;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
+import com.abhishek.architectai.dto.response.ApiResponse;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/interview")
@@ -19,10 +21,17 @@ public class InterviewController {
     }
 
     @PostMapping("/submit")
-    public InterviewResponse submitAnswer(
+    public ApiResponse<InterviewResponse> submitAnswer(
             @Valid @RequestBody InterviewRequest request) {
 
-        return interviewService.processInterviewAnswer(request);
+        InterviewResponse response =
+                interviewService.processInterviewAnswer(request);
+
+        return new ApiResponse<>(
+                true,
+                LocalDateTime.now(),
+                response
+        );
     }
     @GetMapping("/history")
     public List<Interview> getHistory() {
@@ -31,4 +40,6 @@ public class InterviewController {
 
     @DeleteMapping("/{id}")
     public void deleteInterview(@PathVariable Long id) { interviewService.deleteInterview(id);}
+
+
 }
