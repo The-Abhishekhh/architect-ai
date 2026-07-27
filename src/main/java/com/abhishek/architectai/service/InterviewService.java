@@ -12,6 +12,9 @@ import com.abhishek.architectai.exception.InterviewNotFoundException;
 import com.abhishek.architectai.client.AiApiRequest;
 import com.abhishek.architectai.client.AiApiResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class InterviewService {
@@ -60,8 +63,15 @@ public class InterviewService {
 
         return new InterviewResponse(score, feedback);
     }
-    public List<Interview> getInterviewHistory() {
-        return interviewRepository.findAll();
+    public Page<Interview> getInterviewHistory(
+            int page,
+            int size) {
+
+        Pageable pageable =
+                PageRequest.of(page, size);
+
+        return interviewRepository.findAll(pageable);
+
     }
 
     public void deleteInterview(Long id) {
