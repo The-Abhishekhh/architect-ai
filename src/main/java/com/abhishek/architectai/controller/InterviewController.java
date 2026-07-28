@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import com.abhishek.architectai.dto.response.ApiResponse;
 import java.time.LocalDateTime;
 import org.springframework.data.domain.Page;
+import com.abhishek.architectai.dto.response.PagedResponse;
 
 @RestController
 @RequestMapping("/api/interview")
@@ -35,7 +36,7 @@ public class InterviewController {
         );
     }
     @GetMapping("/history")
-    public ApiResponse<Page<Interview>> getHistory(
+    public ApiResponse<PagedResponse<Interview>> getHistory(
 
             @RequestParam(defaultValue = "0")
             int page,
@@ -49,10 +50,29 @@ public class InterviewController {
                         size
                 );
 
+        PagedResponse<Interview> pagedResponse =
+                new PagedResponse<>(
+
+                        history.getContent(),
+
+                        history.getNumber(),
+
+                        history.getSize(),
+
+                        history.getTotalElements(),
+
+                        history.getTotalPages()
+
+                );
+
         return new ApiResponse<>(
+
                 true,
+
                 LocalDateTime.now(),
-                history
+
+                pagedResponse
+
         );
     }
 
