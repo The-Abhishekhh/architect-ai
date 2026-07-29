@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 @Service
 public class InterviewService {
@@ -65,13 +66,25 @@ public class InterviewService {
     }
     public Page<Interview> getInterviewHistory(
             int page,
-            int size) {
+            int size,
+            String sortBy,
+            String direction) {
+
+        Sort sort =
+                direction.equalsIgnoreCase("desc")
+
+                        ? Sort.by(sortBy).descending()
+
+                        : Sort.by(sortBy).ascending();
 
         Pageable pageable =
-                PageRequest.of(page, size);
+                PageRequest.of(
+                        page,
+                        size,
+                        sort
+                );
 
         return interviewRepository.findAll(pageable);
-
     }
 
     public void deleteInterview(Long id) {

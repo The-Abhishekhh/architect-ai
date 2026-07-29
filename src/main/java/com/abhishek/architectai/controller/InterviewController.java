@@ -42,12 +42,20 @@ public class InterviewController {
             int page,
 
             @RequestParam(defaultValue = "5")
-            int size) {
+            int size,
+
+            @RequestParam(defaultValue = "id")
+            String sortBy,
+
+            @RequestParam(defaultValue = "asc")
+            String direction) {
 
         Page<Interview> history =
                 interviewService.getInterviewHistory(
                         page,
-                        size
+                        size,
+                        sortBy,
+                        direction
                 );
 
         PagedResponse<Interview> pagedResponse =
