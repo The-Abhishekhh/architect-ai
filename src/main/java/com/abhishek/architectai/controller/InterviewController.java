@@ -1,16 +1,16 @@
 package com.abhishek.architectai.controller;
 
-import com.abhishek.architectai.entity.Interview;
-import java.util.List;
 import com.abhishek.architectai.dto.InterviewRequest;
 import com.abhishek.architectai.dto.InterviewResponse;
-import com.abhishek.architectai.service.InterviewService;
-import org.springframework.web.bind.annotation.*;
-import jakarta.validation.Valid;
 import com.abhishek.architectai.dto.response.ApiResponse;
-import java.time.LocalDateTime;
-import org.springframework.data.domain.Page;
 import com.abhishek.architectai.dto.response.PagedResponse;
+import com.abhishek.architectai.entity.Interview;
+import com.abhishek.architectai.service.InterviewService;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/interview")
@@ -35,6 +35,7 @@ public class InterviewController {
                 response
         );
     }
+
     @GetMapping("/history")
     public ApiResponse<PagedResponse<Interview>> getHistory(
 
@@ -48,14 +49,18 @@ public class InterviewController {
             String sortBy,
 
             @RequestParam(defaultValue = "asc")
-            String direction) {
+            String direction,
+
+            @RequestParam(defaultValue = "")
+            String keyword) {
 
         Page<Interview> history =
                 interviewService.getInterviewHistory(
                         page,
                         size,
                         sortBy,
-                        direction
+                        direction,
+                        keyword
                 );
 
         PagedResponse<Interview> pagedResponse =
@@ -85,7 +90,7 @@ public class InterviewController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteInterview(@PathVariable Long id) { interviewService.deleteInterview(id);}
-
-
+    public void deleteInterview(@PathVariable Long id) {
+        interviewService.deleteInterview(id);
+    }
 }

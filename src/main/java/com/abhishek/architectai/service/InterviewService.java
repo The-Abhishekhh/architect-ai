@@ -65,10 +65,16 @@ public class InterviewService {
         return new InterviewResponse(score, feedback);
     }
     public Page<Interview> getInterviewHistory(
+
             int page,
+
             int size,
+
             String sortBy,
-            String direction) {
+
+            String direction,
+
+            String keyword) {
 
         Sort sort =
                 direction.equalsIgnoreCase("desc")
@@ -84,7 +90,17 @@ public class InterviewService {
                         sort
                 );
 
-        return interviewRepository.findAll(pageable);
+        if (keyword == null || keyword.isBlank()) {
+
+            return interviewRepository.findAll(pageable);
+
+        }
+
+        return interviewRepository
+                .findByQuestionContainingIgnoreCase(
+                        keyword,
+                        pageable
+                );
     }
 
     public void deleteInterview(Long id) {
