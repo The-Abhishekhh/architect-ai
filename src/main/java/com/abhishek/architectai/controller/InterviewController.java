@@ -52,7 +52,11 @@ public class InterviewController {
             String direction,
 
             @RequestParam(defaultValue = "")
-            String keyword) {
+            String keyword,
+
+            @RequestParam(required = false)
+            Integer minScore
+    ) {
 
         Page<Interview> history =
                 interviewService.getInterviewHistory(
@@ -60,32 +64,23 @@ public class InterviewController {
                         size,
                         sortBy,
                         direction,
-                        keyword
+                        keyword,
+                        minScore
                 );
 
         PagedResponse<Interview> pagedResponse =
                 new PagedResponse<>(
-
                         history.getContent(),
-
                         history.getNumber(),
-
                         history.getSize(),
-
                         history.getTotalElements(),
-
                         history.getTotalPages()
-
                 );
 
         return new ApiResponse<>(
-
                 true,
-
                 LocalDateTime.now(),
-
                 pagedResponse
-
         );
     }
 

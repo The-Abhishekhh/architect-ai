@@ -13,4 +13,13 @@ public interface InterviewRepository extends JpaRepository<Interview,Long> {
             Pageable pageable
 
     );
+    Page<Interview> findByQuestionContainingIgnoreCaseAndScoreGreaterThanEqual(
+
+            String keyword,
+
+            int minScore,
+
+            Pageable pageable
+
+    );
 }

@@ -74,7 +74,9 @@ public class InterviewService {
 
             String direction,
 
-            String keyword) {
+            String keyword,
+
+            Integer minScore) {
 
         Sort sort =
                 direction.equalsIgnoreCase("desc")
@@ -90,15 +92,27 @@ public class InterviewService {
                         sort
                 );
 
-        if (keyword == null || keyword.isBlank()) {
+        if ((keyword == null || keyword.isBlank())
+                && minScore == null) {
 
             return interviewRepository.findAll(pageable);
 
         }
 
+        if (minScore == null) {
+
+            return interviewRepository
+                    .findByQuestionContainingIgnoreCase(
+                            keyword,
+                            pageable
+                    );
+
+        }
+
         return interviewRepository
-                .findByQuestionContainingIgnoreCase(
+                .findByQuestionContainingIgnoreCaseAndScoreGreaterThanEqual(
                         keyword,
+                        minScore,
                         pageable
                 );
     }
