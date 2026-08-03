@@ -16,6 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import com.abhishek.architectai.specification.InterviewSpecification;
 
 @Service
 public class InterviewService {
@@ -92,29 +94,20 @@ public class InterviewService {
                         sort
                 );
 
-        if ((keyword == null || keyword.isBlank())
-                && minScore == null) {
+        Specification<Interview> specification =
 
-            return interviewRepository.findAll(pageable);
+                Specification
+                        .where(
+                                InterviewSpecification.hasKeyword(keyword)
+                        )
+                        .and(
+                                InterviewSpecification.hasMinimumScore(minScore)
+                        );
 
-        }
-
-        if (minScore == null) {
-
-            return interviewRepository
-                    .findByQuestionContainingIgnoreCase(
-                            keyword,
-                            pageable
-                    );
-
-        }
-
-        return interviewRepository
-                .findByQuestionContainingIgnoreCaseAndScoreGreaterThanEqual(
-                        keyword,
-                        minScore,
-                        pageable
-                );
+        return interviewRepository.findAll(
+                specification,
+                pageable
+        );
     }
 
     public void deleteInterview(Long id) {
