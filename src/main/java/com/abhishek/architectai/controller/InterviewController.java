@@ -55,7 +55,10 @@ public class InterviewController {
             String keyword,
 
             @RequestParam(required = false)
-            Integer minScore
+            Integer minScore,
+
+            @RequestParam(required = false)
+            Integer maxScore
     ) {
 
         Page<Interview> history =
@@ -65,7 +68,8 @@ public class InterviewController {
                         sortBy,
                         direction,
                         keyword,
-                        minScore
+                        minScore,
+                        maxScore
                 );
 
         PagedResponse<Interview> pagedResponse =

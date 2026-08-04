@@ -67,18 +67,13 @@ public class InterviewService {
         return new InterviewResponse(score, feedback);
     }
     public Page<Interview> getInterviewHistory(
-
             int page,
-
             int size,
-
             String sortBy,
-
             String direction,
-
             String keyword,
-
-            Integer minScore) {
+            Integer minScore,
+            Integer maxScore) {
 
         Sort sort =
                 direction.equalsIgnoreCase("desc")
@@ -102,6 +97,9 @@ public class InterviewService {
                         )
                         .and(
                                 InterviewSpecification.hasMinimumScore(minScore)
+                        )
+                        .and(
+                                InterviewSpecification.hasMaximumScore(maxScore)
                         );
 
         return interviewRepository.findAll(

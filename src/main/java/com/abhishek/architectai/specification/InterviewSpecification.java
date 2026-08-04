@@ -41,4 +41,21 @@ public class InterviewSpecification {
 
                 );
     }
+    public static Specification<Interview> hasMaximumScore(
+            Integer maxScore) {
+
+        return (root, query, criteriaBuilder) ->
+
+                maxScore == null
+
+                        ? null
+
+                        : criteriaBuilder.lessThanOrEqualTo(
+
+                        root.get("score"),
+
+                        maxScore
+
+                );
+    }
 }
