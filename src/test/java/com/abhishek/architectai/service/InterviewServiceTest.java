@@ -2,6 +2,8 @@ package com.abhishek.architectai.service;
 
 import com.abhishek.architectai.ai.AiProvider;
 import com.abhishek.architectai.client.AiApiResponse;
+import com.abhishek.architectai.dto.InterviewRequest;
+import com.abhishek.architectai.dto.InterviewResponse;
 import com.abhishek.architectai.repository.InterviewRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -36,11 +38,21 @@ class InterviewServiceTest {
 
         fakeResponse.setScore(8);
         fakeResponse.setFeedback("Strong technical answer");
+
         when(
                 aiProvider.evaluateAnswer(any())
-        )
-                .thenReturn(fakeResponse);
+        ).thenReturn(fakeResponse);
+
+        InterviewRequest request = new InterviewRequest();
+
+        request.setQuestion("What is Polymorphism?");
+        request.setAnswer(
+                "Polymorphism allows one interface to have multiple implementations."
+        );
+        InterviewResponse response =
+                interviewService.processInterviewAnswer(request);
 
     }
+
 
 }
