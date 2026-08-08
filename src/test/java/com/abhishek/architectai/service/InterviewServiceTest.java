@@ -13,6 +13,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+
 
 @ExtendWith(MockitoExtension.class)
 class InterviewServiceTest {
@@ -49,9 +52,22 @@ class InterviewServiceTest {
         request.setAnswer(
                 "Polymorphism allows one interface to have multiple implementations."
         );
+
+
         InterviewResponse response =
                 interviewService.processInterviewAnswer(request);
 
+
+        assertEquals(8, response.getScore());
+
+        assertEquals(
+                "Strong technical answer",
+                response.getFeedback()
+        );
+
+        verify(aiProvider).evaluateAnswer(any());
+
+        verify(interviewRepository).save(any());
     }
 
 
