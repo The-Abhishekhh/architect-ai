@@ -15,7 +15,8 @@ import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
-
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.never;
 
 @ExtendWith(MockitoExtension.class)
 class InterviewServiceTest {
@@ -68,6 +69,28 @@ class InterviewServiceTest {
         verify(aiProvider).evaluateAnswer(any());
 
         verify(interviewRepository).save(any());
+    }
+
+    @Test
+    void shouldNotSaveInterviewWhenAiFails() {
+
+        InterviewRequest request = new InterviewRequest();
+
+        request.setQuestion("What is Polymorphism?");
+        request.setAnswer(
+                "Polymorphism allows one interface to have multiple implementations."
+        );
+
+        when(aiProvider.evaluateAnswer(any()))
+                .thenThrow(new RuntimeException("AI service failed"));
+
+        assertThrows(
+                RuntimeException.class,
+                () -> interviewService.processInterviewAnswer(request)
+        );
+
+        verify(interviewRepository, never()).save(any());
+
     }
 
 
