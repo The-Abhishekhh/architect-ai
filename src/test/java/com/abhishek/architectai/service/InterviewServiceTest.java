@@ -18,6 +18,7 @@ import static org.mockito.Mockito.verify;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 
+
 @ExtendWith(MockitoExtension.class)
 class InterviewServiceTest {
 
@@ -90,6 +91,35 @@ class InterviewServiceTest {
         );
 
         verify(interviewRepository, never()).save(any());
+
+    }
+
+    @Test
+    void shouldHandleRepositoryFailure() {
+        InterviewRequest request = new InterviewRequest();
+
+        request.setQuestion("What is Polymorphism?");
+        request.setAnswer(
+                "Polymorphism allows one interface to have multiple implementations."
+        );
+
+        AiApiResponse fakeResponse = new AiApiResponse();
+
+        fakeResponse.setScore(8);
+        fakeResponse.setFeedback("Strong technical answer");
+
+        when(aiProvider.evaluateAnswer(any()))
+                .thenReturn(fakeResponse);
+
+        when(interviewRepository.save(any()))
+                .thenThrow(new RuntimeException("Database failure"));
+
+        assertThrows(
+                RuntimeException.class,
+                () -> interviewService.processInterviewAnswer(request)
+        );
+
+        verify(interviewRepository).save(any());
 
     }
 
