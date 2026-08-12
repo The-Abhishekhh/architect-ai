@@ -17,6 +17,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
+import com.abhishek.architectai.client.AiApiRequest;
+import org.mockito.ArgumentCaptor;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -44,9 +48,8 @@ class InterviewServiceTest {
         fakeResponse.setScore(8);
         fakeResponse.setFeedback("Strong technical answer");
 
-        when(
-                aiProvider.evaluateAnswer(any())
-        ).thenReturn(fakeResponse);
+        when(aiProvider.evaluateAnswer(any()))
+                .thenReturn(fakeResponse);
 
         InterviewRequest request = new InterviewRequest();
 
@@ -55,10 +58,12 @@ class InterviewServiceTest {
                 "Polymorphism allows one interface to have multiple implementations."
         );
 
+        // Act
 
         InterviewResponse response =
                 interviewService.processInterviewAnswer(request);
 
+        // Assert
 
         assertEquals(8, response.getScore());
 
@@ -67,7 +72,28 @@ class InterviewServiceTest {
                 response.getFeedback()
         );
 
-        verify(aiProvider).evaluateAnswer(any());
+        // Verify AI interaction
+
+        ArgumentCaptor<AiApiRequest> aiRequestCaptor =
+                ArgumentCaptor.forClass(AiApiRequest.class);
+
+        verify(aiProvider)
+                .evaluateAnswer(aiRequestCaptor.capture());
+
+        AiApiRequest capturedRequest =
+                aiRequestCaptor.getValue();
+
+        assertEquals(
+                "What is Polymorphism?",
+                capturedRequest.getQuestion()
+        );
+
+        assertEquals(
+                "Polymorphism allows one interface to have multiple implementations.",
+                capturedRequest.getAnswer()
+        );
+
+        // Verify repository interaction
 
         verify(interviewRepository).save(any());
     }
@@ -120,6 +146,7 @@ class InterviewServiceTest {
         );
 
         verify(interviewRepository).save(any());
+
 
     }
 
