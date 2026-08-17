@@ -49,7 +49,7 @@ public class InterviewService {
         AiApiResponse aiResponse =
                 aiProvider.evaluateAnswer(aiRequest);
 
-        int score = 8;
+        int score = aiResponse.getScore();
         String feedback =
                 aiResponse.getFeedback();
 

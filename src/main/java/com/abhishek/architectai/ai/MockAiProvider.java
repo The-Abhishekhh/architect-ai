@@ -12,7 +12,7 @@ public class MockAiProvider implements AiProvider {
 
         AiApiResponse response = new AiApiResponse();
 
-        response.setScore(8);
+        response.setScore(4);
 
         response.setFeedback(
                 "Good attempt at answering the question. Add more technical depth and include a real-world example."

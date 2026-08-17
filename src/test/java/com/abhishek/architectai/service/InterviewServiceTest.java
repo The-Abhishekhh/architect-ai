@@ -20,8 +20,6 @@ import static org.mockito.Mockito.never;
 import com.abhishek.architectai.client.AiApiRequest;
 import org.mockito.ArgumentCaptor;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 
 @ExtendWith(MockitoExtension.class)
 class InterviewServiceTest {
@@ -45,7 +43,7 @@ class InterviewServiceTest {
 
         AiApiResponse fakeResponse = new AiApiResponse();
 
-        fakeResponse.setScore(8);
+        fakeResponse.setScore(4);
         fakeResponse.setFeedback("Strong technical answer");
 
         when(aiProvider.evaluateAnswer(any()))
@@ -65,7 +63,7 @@ class InterviewServiceTest {
 
         // Assert
 
-        assertEquals(8, response.getScore());
+        assertEquals(4, response.getScore());
 
         assertEquals(
                 "Strong technical answer",
@@ -131,7 +129,7 @@ class InterviewServiceTest {
 
         AiApiResponse fakeResponse = new AiApiResponse();
 
-        fakeResponse.setScore(8);
+        fakeResponse.setScore(4);
         fakeResponse.setFeedback("Strong technical answer");
 
         when(aiProvider.evaluateAnswer(any()))
