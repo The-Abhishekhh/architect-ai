@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import com.abhishek.architectai.client.AiApiRequest;
 import org.mockito.ArgumentCaptor;
+import com.abhishek.architectai.exception.InvalidAiResponseException;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -146,6 +147,32 @@ class InterviewServiceTest {
         verify(interviewRepository).save(any());
 
 
+    }
+
+    @Test
+    void shouldRejectInvalidAiResponse() {
+
+        InterviewRequest request = new InterviewRequest();
+
+        request.setQuestion("What is Polymorphism?");
+        request.setAnswer(
+                "Polymorphism allows one interface to have multiple implementations."
+        );
+
+        AiApiResponse fakeResponse = new AiApiResponse();
+
+        fakeResponse.setScore(null);
+        fakeResponse.setFeedback("Strong technical answer");
+
+        when(aiProvider.evaluateAnswer(any()))
+                .thenReturn(fakeResponse);
+
+        assertThrows(
+                InvalidAiResponseException.class,
+                () -> interviewService.processInterviewAnswer(request)
+        );
+
+        verify(interviewRepository, never()).save(any());
     }
 
 

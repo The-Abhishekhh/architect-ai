@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import com.abhishek.architectai.specification.InterviewSpecification;
+import com.abhishek.architectai.exception.InvalidAiResponseException;
 
 @Service
 public class InterviewService {
@@ -49,7 +50,15 @@ public class InterviewService {
         AiApiResponse aiResponse =
                 aiProvider.evaluateAnswer(aiRequest);
 
+        if (aiResponse.getScore() == null) {
+
+            throw new InvalidAiResponseException(
+                    "AI provider returned an invalid response: score is missing"
+            );
+        }
+
         int score = aiResponse.getScore();
+
         String feedback =
                 aiResponse.getFeedback();
 
