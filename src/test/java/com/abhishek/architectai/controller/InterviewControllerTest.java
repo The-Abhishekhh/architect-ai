@@ -25,6 +25,8 @@ import static org.mockito.Mockito.verify;
 
 import static org.mockito.Mockito.never;
 
+import com.abhishek.architectai.exception.InvalidAiResponseException;
+
 
 @WebMvcTest(InterviewController.class)
 class InterviewControllerTest {
@@ -144,6 +146,47 @@ class InterviewControllerTest {
 
         verify(interviewService, never())
                 .processInterviewAnswer(any());
+    }
+
+    @Test
+    void shouldHandleInvalidAiResponseException() throws Exception {
+
+        when(interviewService.processInterviewAnswer(any()))
+                .thenThrow(
+                        new InvalidAiResponseException(
+                                "AI provider returned an invalid response: score is missing"
+                        )
+                );
+
+        InterviewRequest request =
+                new InterviewRequest();
+
+        request.setQuestion("What is Polymorphism?");
+        request.setAnswer(
+                "Polymorphism allows one interface to have multiple implementations."
+        );
+
+        String json =
+                objectMapper.writeValueAsString(request);
+
+        mockMvc.perform(
+                        post("/api/interview/submit")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json)
+                )
+                .andExpect(status().isBadGateway())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(
+                        jsonPath("$.data.error")
+                                .value(
+                                        "AI provider returned an invalid response: score is missing"
+                                )
+                );
+
+        verify(interviewService)
+                .processInterviewAnswer(any());
+
+
     }
 
 }
