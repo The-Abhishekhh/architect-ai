@@ -1,123 +1,44 @@
 # 🚀 ArchitectAI
 
-An AI-powered backend application that simulates technical interview evaluations.
+An AI-powered backend application built with **Java, Spring Boot, Spring Data JPA, MySQL, and Google Gemini** to simulate technical interview evaluation.
 
-ArchitectAI is being built to demonstrate enterprise-level backend development using Java and Spring Boot while integrating modern AI capabilities.
-
----
-
-## ✨ Features
-
-- Submit interview questions and answers
-- AI-powered evaluation architecture
-- RESTful API design
-- Interview history management
-- Delete interview records
-- Request validation
-- Global exception handling
-- MySQL database integration
-- Structured logging
-- External API integration architecture
-- Layered enterprise architecture
+ArchitectAI is designed as a production-style backend system rather than a simple CRUD application. The project focuses on clean architecture, separation of concerns, extensibility, validation, dynamic data retrieval, external AI integration, exception handling, and automated testing.
 
 ---
 
-## 🛠 Tech Stack
+## ✨ What ArchitectAI Does
 
-- Java
-- Spring Boot
-- Spring Data JPA
-- Hibernate
-- MySQL
-- Maven
-- Lombok
-- REST APIs
-- Postman
-- SLF4J Logging
-- Git & GitHub
+ArchitectAI allows users to submit technical interview questions and answers and receive an AI-generated evaluation.
 
----
+The application:
 
-## 📁 Project Structure
-
-src/main/java
-
-├── client
-
-├── config
-
-├── controller
-
-├── dto
-
-├── entity
-
-├── exception
-
-├── repository
-
-├── service
+- Accepts interview questions and answers
+- Evaluates answers through an AI provider
+- Stores interview results in MySQL
+- Provides searchable interview history
+- Supports dynamic filtering and sorting
+- Supports pagination
+- Validates incoming requests
+- Validates AI responses before processing
+- Handles application and external-service failures
+- Exposes consistent API response structures
+- Provides automated unit and controller tests
 
 ---
 
-## 🏗 Architecture
+## 🧠 Core Capabilities
 
-Client
+### 🤖 AI-Powered Evaluation
 
-↓
+ArchitectAI uses an `AiProvider` abstraction to decouple the application from a specific AI provider.
 
-Controller
+This allows the application to support different AI implementations without changing the business logic.
 
-↓
-
-Service
-
-↓
-
-AI Client Layer
-
-↓
-
-Repository
-
-↓
-
-Hibernate ORM
-
-↓
-
-MySQL Database
-
----
-
-## 🚧 Current Progress
-
-- ✅ Spring Boot setup
-- ✅ Layered architecture
-- ✅ REST APIs
-- ✅ DTO implementation
-- ✅ MySQL integration
-- ✅ JPA/Hibernate
-- ✅ Validation
-- ✅ Global exception handling
-- ✅ External API communication
-- 🔄 Gemini AI integration (In Progress)
-
----
-
-## 🎯 Future Enhancements
-
-- Gemini API Integration
-- AI-based scoring engine
-- JWT Authentication
-- User accounts
-- Interview analytics dashboard
-- Docker support
-- AWS deployment
-- Unit & Integration Testing
-
----
-
-## 👨‍💻 Author
-
-Abhishek Singh
+```text
+InterviewService
+       ↓
+    AiProvider
+       ↓
+ ┌─────┴─────┐
+ ↓           ↓
+Gemini    Mock Provider
