@@ -1,5 +1,6 @@
 package com.abhishek.architectai.controller;
 
+import com.abhishek.architectai.exception.InterviewNotFoundException;
 import com.abhishek.architectai.service.InterviewService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -22,10 +23,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.mockito.ArgumentCaptor;
 import static org.mockito.Mockito.verify;
-
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 
 import com.abhishek.architectai.exception.InvalidAiResponseException;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
+import com.abhishek.architectai.entity.Interview;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import java.util.List;
 
 
 @WebMvcTest(InterviewController.class)
@@ -42,8 +51,6 @@ class InterviewControllerTest {
 
     @Test
     void shouldSubmitInterviewAnswer() throws Exception {
-
-        // Arrange
 
         InterviewResponse fakeResponse =
                 new InterviewResponse(
@@ -62,7 +69,6 @@ class InterviewControllerTest {
                 "Polymorphism allows one interface to have multiple implementations."
         );
 
-        // Act + Assert
 
         mockMvc.perform(
                         post("/api/interview/submit")
@@ -186,6 +192,101 @@ class InterviewControllerTest {
         verify(interviewService)
                 .processInterviewAnswer(any());
 
+
+    }
+
+    @Test
+    void shouldDeleteInterview() throws Exception {
+
+        doNothing()
+                .when(interviewService)
+                .deleteInterview(1L);
+
+        mockMvc.perform(
+                        delete("/api/interview/{id}", 1L)
+                )
+                .andExpect(status().isOk());
+
+        verify(interviewService)
+                .deleteInterview(1L);
+    }
+
+    @Test
+    void shouldReturnNotFoundWhenInterviewDoesNotExist() throws Exception {
+
+        Long interviewId = 999L;
+
+        doThrow(
+                new InterviewNotFoundException(
+                        "Interview with id " + interviewId + " not found"
+                )
+        )
+                .when(interviewService)
+                .deleteInterview(interviewId);
+
+        mockMvc.perform(
+                        delete("/api/interview/{id}", interviewId)
+                )
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(
+                        jsonPath("$.data.error")
+                                .value(
+                                        "Interview with id 999 not found"
+                                )
+                );
+
+
+        verify(interviewService)
+                .deleteInterview(interviewId);
+    }
+
+    @Test
+    void shouldGetInterviewHistory() throws Exception {
+
+
+        Interview interview =
+                new Interview(
+                        1L,
+                        "What is Polymorphism?",
+                        "Polymorphism allows one interface to have multiple implementations.",
+                        4,
+                        "Strong technical answer"
+                );
+
+        Page<Interview> fakePage =
+                new PageImpl<>(
+                        List.of(interview)
+                );
+
+        when(
+                interviewService.getInterviewHistory(
+                        0,
+                        5,
+                        "id",
+                        "desc",
+                        "Design",
+                        7,
+                        9
+                )
+        )
+                .thenReturn(fakePage);
+
+
+        mockMvc.perform(
+                        get("/api/interview/history")
+                                .param("keyword", "Design")
+                                .param("minScore", "7")
+                                .param("maxScore", "9")
+                                .param("page", "0")
+                                .param("size", "5")
+                                .param("sortBy", "id")
+                                .param("direction", "desc")
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data.items[0].id").value(1))
+                .andExpect(jsonPath("$.data.items[0].score").value(4));
 
     }
 
